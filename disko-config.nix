@@ -23,21 +23,12 @@
 
             boot = {
               size = "1G";
+              # Boot non chiffré
               content = {
-                type = "luks";
-                name = "cryptboot";
-                settings = {
-                  allowDiscards = true;
-                  crypttabOptions = ["luks.options=luks2"];
-                };
-                # Utilisation du secret géré par sops-nix
-                passwordFile = config.sops.secrets.luks-boot-key.path;
-                content = {
-                  type = "filesystem";
-                  format = "ext4";
-                  mountpoint = "/boot";
-                  mountOptions = ["defaults"];
-                };
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/boot";
+                mountOptions = ["defaults"];
               };
             };
 
