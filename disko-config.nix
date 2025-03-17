@@ -1,96 +1,64 @@
-{ targetDisk }: # Paramètre du disque cible avec valeur par défaut
+{ disk ? "/dev/nvme0n1", ... }:
 
-{ config, lib, ... }:
 {
   disko.devices = {
-    disk = {
-      main = {
-        device = targetDisk;
-        type = "disk";
-        content = {
-          type = "gpt";
-          partitions = {
-            ESP = {
-              type = "EF00";  # Partition EFI
-              size = "1G";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot/efi";
-                mountOptions = ["defaults"];
-              };
+    disk.main = {
+      device = disk;
+      type = "disk";
+      content = {
+        type = "gpt";
+        partitions = {
+          ESP = {
+            size = "1G";
+            type = "EF00";
+            content = {
+              type = "filesystem";
+              format = "vfat";
+              mountpoint = "/boot/efi";
             };
-
-            boot = {
-              size = "1G";
-              # Boot non chiffré
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/boot";
-                mountOptions = ["defaults"];
-              };
+          };
+          boot = {
+            size = "1G";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/boot";
             };
-
-            root = {
-              size = "100%-17G";
+          };
+          luks = {
+            size = "100%";
+            content = {
+              type = "luks";
+              name = "crypted";
+              extraOpenArgs = [ "--allow-discards" ];
               content = {
-                type = "luks";
-                name = "cryptroot";
-                settings = {
-                  allowDiscards = true;
-                };
-                passwordFile = config.sops.secrets.luks-root-key.path;
-                content = {
-                  type = "btrfs";
-                  extraArgs = ["-f"];
-                  subvolumes = {
-                    "/root" = {
-                      mountpoint = "/";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag"];
-                    };
-                    "/home" = {
-                      mountpoint = "/home";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag"];
-                    };
-                    "/var" = {
-                      mountpoint = "/var";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag"];
-                    };
-                    "/var/log" = {
-                      mountpoint = "/var/log";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag"];
-                    };
-                    "/opt" = {
-                      mountpoint = "/opt";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag"];
-                    };
-                    "/srv" = {
-                      mountpoint = "/srv";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag"];
-                    };
-                    "/tmp" = {
-                      mountpoint = "/tmp";
-                      mountOptions = ["compress=zstd" "noatime" "autodefrag" "noexec" "nosuid" "nodev"];
-                    };
+                type = "btrfs";
+                extraArgs = [ "-f" ];
+                subvolumes = {
+                  "@" = { mountpoint = "/"; };
+                  "@home" = { mountpoint = "/home"; };
+                  "@var" = { mountpoint = "/var"; };
+                  "@var_log" = { mountpoint = "/var/log"; };
+                  "@opt" = { mountpoint = "/opt"; };
+                  "@srv" = { mountpoint = "/srv"; };
+                  "@tmp" = {
+                    mountpoint = "/tmp";
+                    mountOptions = [ "noexec" "nosuid" "nodev" ];
                   };
                 };
+                mountOptions = [ "compress=zstd" "noatime" "autodefrag" ];
               };
             };
-
-            swap = {
-              size = "16G";
+          };
+          swap = {
+            size = "16G";
+            content = {
+              type = "luks";
+              name = "cryptswap";
+              extraOpenArgs = [ "--allow-discards" ];
               content = {
-                type = "luks";
-                name = "cryptswap";
-                settings = {
-                  allowDiscards = true;
-                };
-                passwordFile = config.sops.secrets.luks-swap-key.path;
-                content = {
-                  type = "swap";
-                  resumeDevice = true;
-                };
+                type = "swap";
+                resumeDevice = true;
               };
             };
           };
