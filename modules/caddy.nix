@@ -7,7 +7,7 @@ let
       # Enable HTTPS automatically tls { Caddy will automatically get and manage certificates }
 
       # Forward all traffic to Vaultwarden
-      reverse_proxy 127.0.0.1:8009 {
+      reverse_proxy vaultwarden:8009 {
         # Enable WebSocket support for sync
         header_up X-Real-IP {remote_host}
         header_up Host {host}
