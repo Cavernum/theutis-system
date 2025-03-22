@@ -5,9 +5,9 @@ let
   caddyfileContent = ''
     vaultwarden.cavernum.ovh {
       # Enable HTTPS automatically
-      tls {
+      #tls {
         # Caddy will automatically get and manage certificates
-      }
+      #}
 
       # Forward all traffic to Vaultwarden
       reverse_proxy localhost:8009 {

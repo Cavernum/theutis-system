@@ -4,7 +4,6 @@
   imports = [
     ../modules/bootloader.nix
     ../modules/caddy.nix
-    ../modules/caddy.nix
   ];
 
   networking.hostName = "theutis";
