@@ -4,10 +4,7 @@ let
   # Define your Caddyfile content directly here
   caddyfileContent = ''
     vaultwarden.cavernum.ovh {
-      # Enable HTTPS automatically
-      #tls {
-        # Caddy will automatically get and manage certificates
-      #}
+      # Enable HTTPS automatically tls { Caddy will automatically get and manage certificates }
 
       # Forward all traffic to Vaultwarden
       reverse_proxy localhost:8009 {
@@ -39,9 +36,9 @@ in
           "443:443"
         ];
         volumes = [
-          # "/var/www:/srv"  # Mount your website files here (modify path as needed)
-          # "caddy_data:/data"
-          # "caddy_config:/config"
+          "/var/www:/srv"  # Mount your website files here (modify path as needed)
+          "caddy_data:/data"
+          "caddy_config:/config"
           "${caddyfile}:/etc/caddy/Caddyfile:ro"
         ];
       };

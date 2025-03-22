@@ -36,9 +36,6 @@
           # Logging settings
           LOG_LEVEL = "warn";
         };
-        extraOptions = [
-          "--restart=unless-stopped"
-        ];
       };
     };
   };
