@@ -11,51 +11,51 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@" ];
     };
   fileSystems."/var" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@var" ];
     };
   fileSystems."/var/log" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@var_log" ];
     };
   fileSystems."/opt" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@opt" ];
     };
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@home" ];
     };
   fileSystems."/tmp" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@tmp" ];
     };
   fileSystems."/srv" =
-    { device = "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
       fsType = "btrfs";
       options = [ "subvol=@srv" ];
     };
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/fa0ee731-e2ec-491e-be83-2039aa25c1a2";
+    { device = lib.mkDefault "/dev/disk/by-uuid/fa0ee731-e2ec-491e-be83-2039aa25c1a2";
       fsType = "ext4";
     };
   fileSystems."/boot/efi" =
-    { device = "/dev/disk/by-uuid/B80B-B05F";
+    { device = lib.mkDefault "/dev/disk/by-uuid/B80B-B05F";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/097099d8-05bb-4459-8ce4-d52c67d09edf"; }
+    [ { device = lib.mkDefault "/dev/disk/by-uuid/097099d8-05bb-4459-8ce4-d52c67d09edf"; }
     ];
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
