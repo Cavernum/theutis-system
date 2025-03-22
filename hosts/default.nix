@@ -176,7 +176,7 @@
     };
   };
   virtualisation.oci-containers.backend = "podman";
-  networking.firewall.interfaces."podman0" = {
+  networking.firewall.interfaces."podman1" = {
     allowedTCPPorts = [ 53 ];
     allowedUDPPorts = [ 53 ];
   };
