@@ -172,9 +172,14 @@
     defaultNetwork.settings = {
       dns_enabled = true;  # Enable DNS resolution in the default network
       ipv6_enabled = true;
+      dnsname.enable = true;
     };
   };
   virtualisation.oci-containers.backend = "podman";
+  networking.firewall.interfaces."podman0" = {
+    allowedTCPPorts = [ 53 ];
+    allowedUDPPorts = [ 53 ];
+  };
 
   system.stateVersion = "24.11";
 }
