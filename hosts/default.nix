@@ -166,7 +166,13 @@
     }
   ];
 
-  virtualisation.podman.enable = true;
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    defaultNetwork.settings = {
+      dns_enabled = true;  # Enable DNS resolution in the default network
+    };
+  };
   virtualisation.oci-containers.backend = "podman";
 
   system.stateVersion = "24.11";
