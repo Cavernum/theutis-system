@@ -51,6 +51,10 @@ in
           "caddy_config:/config"
           "${caddyfile}:/etc/caddy/Caddyfile:ro"
         ];
+        extraOptions = [
+          "--network=caddy_network" 
+          "--name=caddy"
+        ];
       };
     };
   };

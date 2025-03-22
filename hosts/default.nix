@@ -171,6 +171,7 @@
     dockerCompat = true;
     defaultNetwork.settings = {
       dns_enabled = true;  # Enable DNS resolution in the default network
+      ipv6_enabled = true;
     };
   };
   virtualisation.oci-containers.backend = "podman";

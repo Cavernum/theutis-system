@@ -9,12 +9,12 @@
         volumes = [
           "vw-data:/data"  # Persistent volume for all Vaultwarden data
         ];
-        ports = [
-          "8009:80"
-        ];
+        # ports = [
+        #   "8009:80"
+        # ];
         environment = {
           # Core settings
-          ROCKET_PORT = "80";
+          ROCKET_PORT = "8009";
           ROCKET_WORKERS = "10";
           
           # Web vault settings
@@ -38,6 +38,10 @@
           # Logging settings
           LOG_LEVEL = "warn";
         };
+        extraOptions = [
+          "--network=caddy_network" 
+          "--name=vaultwarden"
+        ];
       };
     };
   };
