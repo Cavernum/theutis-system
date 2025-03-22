@@ -26,6 +26,16 @@ let
   caddyfile = pkgs.writeText "Caddyfile" caddyfileContent;
 in
 {
+  systemd.services.create-podman-network = {
+    description = "Create Podman network for containers";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.podman}/bin/podman network create --ignore caddy_network || true";
+    };
+  };
   virtualisation.oci-containers = {
     containers = {
       caddy = {
@@ -40,6 +50,10 @@ in
           "caddy_data:/data"
           "caddy_config:/config"
           "${caddyfile}:/etc/caddy/Caddyfile:ro"
+        ];
+        extraOptions = [
+          "--network=caddy_network"
+          "--name=caddy"
         ];
       };
     };

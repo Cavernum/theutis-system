@@ -7,7 +7,7 @@
         image = "docker.io/vaultwarden/server:latest";
         autoStart = true;
         ports = [
-          "8009:80"  # Expose on port 8009 as requested
+          "127.0.0.1:8009:80"  # Expose on port 8009 as requested
         ];
         volumes = [
           "vw-data:/data"  # Persistent volume for all Vaultwarden data
@@ -36,6 +36,10 @@
           # Logging settings
           LOG_LEVEL = "warn";
         };
+        extraOptions = [
+          "--network=caddy_network" 
+          "--name=vaultwarden"
+        ];
       };
     };
   };
