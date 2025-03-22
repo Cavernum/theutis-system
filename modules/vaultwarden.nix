@@ -6,9 +6,6 @@
       vaultwarden = {
         image = "docker.io/vaultwarden/server:latest";
         autoStart = true;
-        ports = [
-          "127.0.0.1:8009:80"  # Expose on port 8009 as requested
-        ];
         volumes = [
           "vw-data:/data"  # Persistent volume for all Vaultwarden data
         ];
@@ -19,9 +16,11 @@
           
           # Web vault settings
           WEB_VAULT_ENABLED = "true";
+
+          WEBSOCKET_ENABLED = "true";
           
           # Optional settings (uncomment and modify as needed)
-          DOMAIN = "https://vaultwarden.cavernum.ovh";
+          DOMAIN = "vaultwarden.cavernum.ovh";
           # ADMIN_TOKEN = "your_admin_token_here";  # Generate this securely
           # SIGNUPS_ALLOWED = "false";  # Disable new sign-ups
           
