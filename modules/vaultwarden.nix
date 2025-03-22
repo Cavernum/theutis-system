@@ -23,7 +23,7 @@
           WEBSOCKET_ENABLED = "true";
           
           # Optional settings (uncomment and modify as needed)
-          DOMAIN = "vaultwarden.cavernum.ovh";
+          DOMAIN = "https://vaultwarden.cavernum.ovh";
           # ADMIN_TOKEN = "your_admin_token_here";  # Generate this securely
           # SIGNUPS_ALLOWED = "false";  # Disable new sign-ups
           
