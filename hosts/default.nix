@@ -3,6 +3,7 @@
 {
   imports = [
     ../modules/bootloader.nix
+    ../modules/caddy.nix
   ];
 
   networking.hostName = "theutis";
@@ -163,6 +164,9 @@
       ];
     }
   ];
+
+  virtualisation.podman.enable = true;
+  virtualisation.oci-containers.backend = "podman";
 
   system.stateVersion = "24.11";
 }
