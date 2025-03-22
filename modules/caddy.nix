@@ -36,7 +36,7 @@ in
           "443:443"
         ];
         volumes = [
-          "/var/www:/srv"  # Mount your website files here (modify path as needed)
+          # "/var/www:/srv"  # Mount your website files here (modify path as needed)
           "caddy_data:/data"
           "caddy_config:/config"
           "${caddyfile}:/etc/caddy/Caddyfile:ro"
