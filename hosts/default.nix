@@ -114,7 +114,7 @@
       { startGid = 100000; count = 65536; }
     ];
     openssh.authorizedKeys.keys = [
-      "rsa-key-20250319 AAAAB3NzaC1yc2EAAAADAQABAAABAQCQ2pIo0SYF1SHDIvII7G2mDdjQxHMh9qC/1PHA0Bbwbd1dfuhv3Z2E9iqYrv+sgKAgFn1Lyv1D4n6yfOrMACSzMkG9TLs6x0Cok148B34lFMW0wWsaJ5lDvhvPNDQpRYcV7ZfGwjY0bABvCUmVPNNNLb3GnndcIM5dQdWtIFrWgawQnS/ckREsIbJwM66tBC90mItyfcga0BCR7i4XLJfDliJLhpFTztNZNYmlhfKi3Ydu0pQ8Fsvj8vp1oH5pvLUDJzlk9W1D8s27U258QWyJz93wjdg6AaQW28/2WiVxnvsl+8hWpMFEiC8RYSvn1MTagicXQW59MrhOWMGUH+2F dudule" 
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHcqZU5WYGvnE1o5cjyTjn9IELmTGGlcjVViGzVxi4i6 eddsa-key-20250403" 
     ];
   };
 
