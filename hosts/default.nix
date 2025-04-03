@@ -114,7 +114,7 @@
       { startGid = 100000; count = 65536; }
     ];
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHcqZU5WYGvnE1o5cjyTjn9IELmTGGlcjVViGzVxi4i6 eddsa-key-20250403" 
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6OJMusrF25tNs3bHcSxxoXnNHmvSuaaGjkXo9VJ4CQ mateo.lachaize@gmail.com" 
     ];
   };
 
