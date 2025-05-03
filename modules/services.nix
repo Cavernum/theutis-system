@@ -54,7 +54,7 @@
         }
       }
     '';
-    caddyfile = pkgs.writeText "Caddyfile" lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services);
+    caddyfile = pkgs.writeText "Caddyfile" "${lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services)}";
   in {
     virtualisation.oci-containers = {
       containers = {
