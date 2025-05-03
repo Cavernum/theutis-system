@@ -13,20 +13,22 @@
       '';
     };
     services = lib.mkOption {
-      type = lib.types.listOf (lib.types.attrsOf (lib.types.submodule {
-        name = lib.mkOption {
-          type = lib.types.str;
-          description = ''
-            The name of the service to be reverse proxied.
-          '';
+      type = lib.types.listOf (lib.types.submodule {
+        options = {
+          name = lib.mkOption {
+            type = lib.types.str;
+            description = ''
+              The name of the service to be reverse proxied.
+            '';
+          };
+          port = lib.mkOption {
+            type = lib.types.int;
+            description = ''
+              The port on which the service is running.
+            '';
+          };
         };
-        port = lib.mkOption {
-          type = lib.types.int;
-          description = ''
-            The port on which the service is running.
-          '';
-        };
-      }));
+      });
       default = [];
       description = ''
         List of services to be reverse proxied.
