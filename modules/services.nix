@@ -33,6 +33,9 @@
       '';
     };
   };
+  imports = [
+    ./services/vaultwarden.nix
+  ];
   config = let
     genRProxyRule = {
       name,
@@ -53,9 +56,6 @@
     '';
     caddyfile = pkgs.writeText "Caddyfile" lib.concatMapStrings genRProxyRule config.theutis_services.services;
   in {
-    imports = [
-      ./services/vaultwarden.nix
-    ];
     virtualisation.oci-containers = {
       containers = {
         caddy = {
