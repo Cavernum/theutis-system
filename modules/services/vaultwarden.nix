@@ -45,7 +45,7 @@
             WEBSOCKET_ENABLED = "true";
 
             # Optional settings (uncomment and modify as needed)
-            DOMAIN = config.domain;
+            DOMAIN = "vaultwarden.${config.theutis_services.domain}";
             # ADMIN_TOKEN = "your_admin_token_here";  # Generate this securely
             # SIGNUPS_ALLOWED = "false";  # Disable new sign-ups
 
