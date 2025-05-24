@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  ...
 }: {
   options.theutis_services.syncthing = with lib; {
     enable = mkEnableOption "Enable Syncthing container";
