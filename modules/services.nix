@@ -102,7 +102,7 @@
       }
     '';
     
-    allRules = [mainDomainRule authentikRule] ++ (map genRProxyRule config.theutis_services.services);
+    allRules = [mainDomainRule] ++ (map genRProxyRule config.theutis_services.services);
     caddyfile = pkgs.writeText "Caddyfile" (lib.concatStringsSep "\n\n" allRules);
     
     # Get all networks from services
