@@ -63,7 +63,7 @@
     theutis_services.syncthing.enable = true;
     virtualisation.oci-containers = {
       containers = {
-        caddy = {
+        caddy2 = {
           image = "docker.io/caddy:latest";
           autoStart = true;
           ports = [
