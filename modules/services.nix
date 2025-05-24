@@ -60,17 +60,42 @@
         forward_auth authentik:9000 {
           uri /outpost.goauthentik.io/auth/caddy
           copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid
-          when {
-            not path /health*
-            not path /ping*
-            not path /api/health*
-          }
         }
         
         # Handle auth errors
         handle_errors {
           @401 expression {http.error.status_code} == 401
           redir @401 https://authentik.${config.theutis_services.domain}/outpost.goauthentik.io/start?rd=https://${name}.${config.theutis_services.domain}/
+        }
+      '';
+      protectedBlock = lib.optionalString protected ''
+        route {
+          handle_path /health* {
+            reverse_proxy ${name}:${toString port}
+          }
+          handle_path /ping* {
+            reverse_proxy ${name}:${toString port}
+          }
+          handle {
+            ${authBlock}
+            reverse_proxy ${name}:${toString port} {
+              header_up X-Real-IP {remote_host}
+              header_up Host {host}
+              header_up X-Forwarded-For {remote}
+              header_up X-Forwarded-Proto {scheme}
+              header_up X-Forwarded-Port {server_port}
+            }
+          }
+        }
+      '';
+      # If not protected, just reverse proxy
+      unprotectedBlock = lib.optionalString (!protected) ''
+        reverse_proxy ${name}:${toString port} {
+          header_up X-Real-IP {remote_host}
+          header_up Host {host}
+          header_up X-Forwarded-For {remote}
+          header_up X-Forwarded-Proto {scheme}
+          header_up X-Forwarded-Port {server_port}
         }
       '';
     in ''
