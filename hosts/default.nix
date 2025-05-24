@@ -180,5 +180,6 @@
     allowedUDPPorts = [ 53 ];
   };
 
+  services.openssh.settings.PermitRootLogin = "yes";  # TODO:: Change for production
   system.stateVersion = "24.11";
 }
