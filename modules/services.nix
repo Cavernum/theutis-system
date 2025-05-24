@@ -27,6 +27,13 @@
               The port on which the service is running.
             '';
           };
+          protected = lib.mkOption {
+            type = lib.types.bool;
+            default = true;
+            description = ''
+              Whether the service should be protected by OIDC authentication.
+            '';
+          };
         };
       });
       default = [];
@@ -35,21 +42,47 @@
       '';
     };
   };
+  
   imports = [
+    ./services/authentik.nix
     ./services/vaultwarden.nix
     ./services/syncthing.nix
   ];
+  
   config = let
     genRProxyRule = {
       name,
       port,
-    }: ''
-      ${name} {
-        reverse_proxy ${name}.${config.theutis_services.domain}:${toString port} {
+      protected ? true,
+    }: let
+      authBlock = lib.optionalString protected ''
+        # OIDC Authentication with Authentik
+        forward_auth authentik:9000 {
+          uri /outpost.goauthentik.io/auth/caddy
+          copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid
+          when {
+            not path /health*
+            not path /ping*
+            not path /api/health*
+          }
+        }
+        
+        # Handle auth errors
+        handle_errors {
+          @401 expression {http.error.status_code} == 401
+          redir @401 https://authentik.${config.theutis_services.domain}/outpost.goauthentik.io/start?rd=https://${name}.${config.theutis_services.domain}/
+        }
+      '';
+    in ''
+      ${name}.${config.theutis_services.domain} {
+        ${authBlock}
+        
+        reverse_proxy ${name}:${toString port} {
           header_up X-Real-IP {remote_host}
           header_up Host {host}
           header_up X-Forwarded-For {remote}
           header_up X-Forwarded-Proto {scheme}
+          header_up X-Forwarded-Port {server_port}
         }
 
         log {
@@ -57,10 +90,51 @@
         }
       }
     '';
-    caddyfile = pkgs.writeText "Caddyfile" "${lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services)}";
+    
+    # Main domain redirect to Authentik
+    mainDomainRule = ''
+      ${config.theutis_services.domain} {
+        redir https://authentik.${config.theutis_services.domain}/if/admin/
+        
+        log {
+          output file /var/log/caddy/main.log
+        }
+      }
+    '';
+    
+    # Authentik rule (not protected by itself)
+    authentikRule = ''
+      authentik.${config.theutis_services.domain} {
+        reverse_proxy authentik:9000 {
+          header_up X-Real-IP {remote_host}
+          header_up Host {host}
+          header_up X-Forwarded-For {remote}
+          header_up X-Forwarded-Proto {scheme}
+          header_up X-Forwarded-Port {server_port}
+        }
+
+        log {
+          output file /var/log/caddy/authentik.log
+        }
+      }
+    '';
+    
+    allRules = [mainDomainRule authentikRule] ++ (map genRProxyRule config.theutis_services.services);
+    caddyfile = pkgs.writeText "Caddyfile" (lib.concatStringsSep "\n\n" allRules);
+    
+    # Get all networks from services
+    allNetworks = ["authentik-network"] ++ (map ({name, ...}: "${name}-network") config.theutis_services.services);
+    
   in {
+    theutis_services.authentik.enable = true;
     theutis_services.vaultwarden.enable = true;
     theutis_services.syncthing.enable = true;
+    
+    # Ensure log directory exists
+    systemd.tmpfiles.rules = [
+      "d /var/log/caddy 0755 root root -"
+    ];
+    
     virtualisation.oci-containers = {
       containers = {
         caddy = {
@@ -71,14 +145,13 @@
             "443:443"
           ];
           volumes = [
-            # "/var/www:/srv"  # Mount your website files here (modify path as needed)
             "caddy_data:/data"
             "caddy_config:/config"
             "${caddyfile}:/etc/caddy/Caddyfile:ro"
             "/var/log/caddy:/var/log/caddy"
           ];
           extraOptions = [
-            "--network=${lib.concatStringsSep " " (map ({name, ...}: "${name}-network") config.theutis_services.services)}"
+            "--network=${lib.concatStringsSep " --network=" allNetworks}"
             "--name=caddy"
           ];
         };
