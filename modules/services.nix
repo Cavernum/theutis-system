@@ -44,8 +44,8 @@
       name,
       port,
     }: ''
-      ${name} {
-        reverse_proxy ${name}.${config.theutis_services.domain}:${toString port} {
+      ${name}.${config.theutis_services.domain} {
+        reverse_proxy ${name}:${toString port} {
           header_up X-Real-IP {remote_host}
           header_up Host {host}
           header_up X-Forwarded-For {remote}
