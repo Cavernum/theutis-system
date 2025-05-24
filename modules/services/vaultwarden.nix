@@ -68,6 +68,17 @@
             
             # Optional admin settings
             # ADMIN_TOKEN = "your_admin_token_here";
+            # Optional settings (uncomment and modify as needed)
+            # ADMIN_TOKEN = "your_admin_token_here";  # Generate this securely
+            # SIGNUPS_ALLOWED = "false";  # Disable new sign-ups
+
+            # SMTP configuration for email
+            # SMTP_HOST = "smtp.example.com";
+            # SMTP_FROM = "vaultwarden@example.com";
+            # SMTP_PORT = "587";
+            # SMTP_SECURITY = "starttls";
+            # SMTP_USERNAME = "username";
+            # SMTP_PASSWORD = "password";
 
             # Logging settings
             LOG_LEVEL = "warn";

@@ -76,7 +76,7 @@
     in ''
       ${name}.${config.theutis_services.domain} {
         ${authBlock}
-        
+
         reverse_proxy ${name}:${toString port} {
           header_up X-Real-IP {remote_host}
           header_up Host {host}
@@ -146,14 +146,13 @@
           ];
           volumes = [
             "caddy_data:/data"
-            "caddy_config:/config"
+            #"caddy_config:/config"
             "${caddyfile}:/etc/caddy/Caddyfile:ro"
             "/var/log/caddy:/var/log/caddy"
           ];
-          extraOptions = [
-            "--network=${lib.concatStringsSep " --network=" allNetworks}"
-            "--name=caddy"
-          ];
+          extraOptions =
+            (lib.concatMap ({name, ...}: ["--network=${name}-network"]) config.theutis_services.services)
+            ++ ["--name=caddy"];
         };
       };
     };
