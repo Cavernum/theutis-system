@@ -37,6 +37,7 @@
   };
   imports = [
     ./services/vaultwarden.nix
+    ./services/syncthing.nix
   ];
   config = let
     genRProxyRule = {
@@ -58,6 +59,8 @@
     '';
     caddyfile = pkgs.writeText "Caddyfile" "${lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services)}";
   in {
+    theutis_services.vaultwarden.enable = true;
+    theutis_services.syncthing.enable = true;
     virtualisation.oci-containers = {
       containers = {
         caddy = {
