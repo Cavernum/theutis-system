@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: {
   options.theutis_services.syncthing = with lib; {
@@ -46,7 +47,7 @@
     
     virtualisation.oci-containers = {
       containers = {
-        syncthing = {
+        syncthing2 = {
           image = config.theutis_services.syncthing.image;
           autoStart = true;
           ports = [
