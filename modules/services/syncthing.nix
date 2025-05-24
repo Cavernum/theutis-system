@@ -44,12 +44,6 @@
             PGID = "1000";  # Adjust to your group ID
             TZ = "Etc/UTC";  # Set timezone
           };
-          ports = [
-            {
-              containerPort = config.theutis_services.syncthing.port;
-              hostPort = config.theutis_services.syncthing.port;
-            }
-          ];
           extraOptions = [
             "--restart=unless-stopped"
             "--network=syncthing-network"
