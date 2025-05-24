@@ -73,7 +73,7 @@
           volumes = [
             # "/var/www:/srv"  # Mount your website files here (modify path as needed)
             "caddy_data:/data"
-            "caddy_config:/config"
+            #"caddy_config:/config"
             "${caddyfile}:/etc/caddy/Caddyfile:ro"
             "/var/log/caddy:/var/log/caddy"
           ];
