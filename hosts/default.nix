@@ -3,12 +3,11 @@
 {
   imports = [
     ../modules/bootloader.nix
-    ../modules/caddy.nix
-    ../modules/vaultwarden.nix
+    ../modules/services.nix
   ];
 
   networking.hostName = "theutis";
-  networking.firewall.allowedTCPPorts = [ 22 80 8009 443 ];
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
   networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Paris";
