@@ -78,7 +78,7 @@
             "/var/log/caddy:/var/log/caddy"
           ];
           extraOptions = [
-            "--network=${lib.concatMapStrings ({name, ...}: "${name}-network") config.theutis_services.services}"
+            "--network=${lib.concatStringsSep " " (map ({name, ...}: "${name}-network") config.theutis_services.services)}"
             "--name=caddy"
           ];
         };
