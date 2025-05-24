@@ -77,10 +77,9 @@
             "${caddyfile}:/etc/caddy/Caddyfile:ro"
             "/var/log/caddy:/var/log/caddy"
           ];
-          extraOptions = [
-            (lib.concatMapStringsSep " " ({name, ...}: "--network=${name}-network") config.theutis_services.services)
-            "--name=caddy"
-          ];
+          extraOptions =
+            (lib.concatMap ({name, ...}: ["--network=${name}-network"]) config.theutis_services.services)
+            ++ ["--name=caddy"];
         };
       };
     };
