@@ -102,23 +102,6 @@
       }
     '';
     
-    # Authentik rule (not protected by itself)
-    authentikRule = ''
-      authentik.${config.theutis_services.domain} {
-        reverse_proxy authentik:9000 {
-          header_up X-Real-IP {remote_host}
-          header_up Host {host}
-          header_up X-Forwarded-For {remote}
-          header_up X-Forwarded-Proto {scheme}
-          header_up X-Forwarded-Port {server_port}
-        }
-
-        log {
-          output file /var/log/caddy/authentik.log
-        }
-      }
-    '';
-    
     allRules = [mainDomainRule authentikRule] ++ (map genRProxyRule config.theutis_services.services);
     caddyfile = pkgs.writeText "Caddyfile" (lib.concatStringsSep "\n\n" allRules);
     
