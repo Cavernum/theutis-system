@@ -36,7 +36,7 @@
           volumes = config.theutis_services.vaultwarden.volumes;
           environment = {
             # Core settings
-            ROCKET_PORT = "8009";
+            ROCKET_PORT = toString config.theutis_services.vaultwarden.port;
             ROCKET_WORKERS = "10";
 
             # Web vault settings
