@@ -53,6 +53,7 @@
         }
 
         log {
+          level debug
           output file /var/log/caddy/${name}.log
         }
       }
