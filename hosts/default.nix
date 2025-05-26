@@ -176,8 +176,12 @@
   };
   virtualisation.oci-containers.backend = "podman";
   networking.firewall.interfaces."podman1" = {
-    allowedTCPPorts = [ 53 ];
-    allowedUDPPorts = [ 53 ];
+    allowedTCPPorts = [ 53 80 443 ];
+    allowedUDPPorts = [ 53 80 443 ];
+  };
+  networking.firewall.interfaces."podman2" = {
+    allowedTCPPorts = [ 53 80 443 ];
+    allowedUDPPorts = [ 53 80 443 ];
   };
 
   services.openssh.settings.PermitRootLogin = "yes";  # TODO:: Change for production
