@@ -184,6 +184,10 @@
     allowedUDPPorts = [ 53 80 443 ];
   };
 
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.rp_filter" = 2;
+  };
+
   services.openssh.settings.PermitRootLogin = "yes";  # TODO:: Change for production
   system.stateVersion = "24.11";
 }
