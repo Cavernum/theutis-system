@@ -131,9 +131,6 @@
     allRules = [mainDomainRule] ++ (map genRProxyRule config.theutis_services.services);
     caddyfile = pkgs.writeText "Caddyfile" (lib.concatStringsSep "\n\n" allRules);
     
-    # Get all networks from services
-    allNetworks = ["authentik-network"] ++ (map ({name, ...}: "${name}-network") config.theutis_services.services);
-    
   in {
     theutis_services.authentik.enable = true;
     theutis_services.vaultwarden.enable = true;
