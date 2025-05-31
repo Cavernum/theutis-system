@@ -61,7 +61,7 @@
             LOG_LEVEL = "warn";
           };
           extraOptions = [
-            "--network=vaultwarden-network"
+            # "--network=vaultwarden-network"
             "--name=vaultwarden"
           ];
         };

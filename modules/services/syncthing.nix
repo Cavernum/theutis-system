@@ -45,7 +45,7 @@
             TZ = "Etc/UTC";  # Set timezone
           };
           extraOptions = [
-            "--network=syncthing-network"
+            #"--network=syncthing-network"
             "--name=syncthing"
           ];
         };
