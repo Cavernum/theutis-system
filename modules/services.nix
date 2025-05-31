@@ -116,7 +116,6 @@
         }
       }
     '';
-    caddyfile = pkgs.writeText "Caddyfile" "${lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services)}";
     
     # Main domain redirect to Authentik
     mainDomainRule = ''
