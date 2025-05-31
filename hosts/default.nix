@@ -180,41 +180,17 @@
   
   # Enhanced firewall configuration for containers
   networking.firewall.interfaces."podman1" = {
-    allowedTCPPorts = [ 53 ];
-    allowedUDPPorts = [ 53 ];
+    allowedTCPPorts = [ 53 80 443 ];
+    allowedUDPPorts = [ 53 80 443 ];
   };
-  networking.firewall.interfaces."podman0" = {
-    allowedTCPPorts = [ 53 ];
-    allowedUDPPorts = [ 53 ];
+  networking.firewall.interfaces."podman2" = {
+    allowedTCPPorts = [ 53 80 443 ];
+    allowedUDPPorts = [ 53 80 443 ];
   };
 
-  # Create container networks
-  systemd.services.create-container-networks = {
-    description = "Create container networks";
-    after = [ "podman.service" ];
-    wants = [ "podman.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = let
-        networkScript = pkgs.writeShellScript "create-networks" ''
-          set -e
-          
-          # Create networks if they don't exist
-          networks=("authentik-network" "vaultwarden-network" "syncthing-network")
-          
-          for network in "''${networks[@]}"; do
-            if ! ${pkgs.podman}/bin/podman network exists "$network"; then
-              echo "Creating network: $network"
-              ${pkgs.podman}/bin/podman network create "$network"
-            else
-              echo "Network $network already exists"
-            fi
-          done
-        '';
-      in "${networkScript}";
-    };
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.rp_filter" = 2;
+    "net.ipv4.conf.default.rp_filter" = 2;
   };
 
   services.openssh.settings.PermitRootLogin = "yes";  # TODO:: Change for production

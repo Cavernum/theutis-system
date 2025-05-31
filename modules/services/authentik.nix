@@ -183,7 +183,6 @@
             POSTGRES_DB = "authentik";
           };
           extraOptions = [
-            "--network=authentik-network"
             "--name=authentik-postgresql"
             "--health-cmd=pg_isready -d authentik -U authentik"
             "--health-interval=30s"
@@ -204,7 +203,6 @@
             REDIS_PASSWORD = "authentik-redis-password";
           };
           extraOptions = [
-            "--network=authentik-network"
             "--name=authentik-redis"
             "--health-cmd=redis-cli ping || exit 1"
             "--health-interval=30s"
@@ -252,7 +250,6 @@
             "authentik-custom-templates:/templates"
           ];
           extraOptions = [
-            "--network=authentik-network"
             "--name=authentik"
             "--depends-on=authentik-postgresql:healthy"
             "--depends-on=authentik-redis:healthy"
@@ -287,7 +284,6 @@
             "authentik-custom-templates:/templates"
           ];
           extraOptions = [
-            "--network=authentik-network"
             "--name=authentik-worker"
             "--depends-on=authentik-postgresql:healthy"
             "--depends-on=authentik-redis:healthy"

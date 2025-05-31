@@ -111,10 +111,12 @@
         }
 
         log {
+          level debug
           output file /var/log/caddy/${name}.log
         }
       }
     '';
+    caddyfile = pkgs.writeText "Caddyfile" "${lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services)}";
     
     # Main domain redirect to Authentik
     mainDomainRule = ''
@@ -158,9 +160,6 @@
             "${caddyfile}:/etc/caddy/Caddyfile:ro"
             "/var/log/caddy:/var/log/caddy"
           ];
-          extraOptions =
-            (lib.concatMap ({name, ...}: ["--network=${name}-network"]) config.theutis_services.services)
-            ++ ["--name=caddy"];
         };
       };
     };

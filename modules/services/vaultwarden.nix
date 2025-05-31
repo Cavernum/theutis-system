@@ -22,8 +22,8 @@
     };
   };
   
-  config = lib.mkIf config.theutis_services.vaultwarden.enable {
-    theutis_services.services = lib.mkAfter [
+  config = {
+    theutis_services.services = [
       {
         name = "vaultwarden";
         port = config.theutis_services.vaultwarden.port;
@@ -34,7 +34,7 @@
     virtualisation.oci-containers = {
       containers = {
         vaultwarden = {
-          image = config.theutis_services.vaultwarden.image;
+          image = "docker.io/vaultwarden/server:latest";
           autoStart = true;
           volumes = config.theutis_services.vaultwarden.volumes;
           environment = {
@@ -89,8 +89,6 @@
             ICON_SERVICE = "internal";
           };
           extraOptions = [
-            "--network=vaultwarden-network"
-            "--network=authentik-network"
             "--name=vaultwarden"
           ];
         };
