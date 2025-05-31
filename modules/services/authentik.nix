@@ -52,6 +52,20 @@
       jq
     ];
 
+    # Create the authentik network
+    systemd.services.create-authentik-network = {
+      description = "Create Docker network for Authentik";
+      after = [ "docker.service" ];
+      wants = [ "docker.service" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.docker}/bin/docker network create authentik-network || true";
+        ExecStop = "${pkgs.docker}/bin/docker network rm authentik-network || true";
+      };
+    };
+
     # Create the bootstrap configuration script
     systemd.services.authentik-bootstrap = {
       description = "Bootstrap Authentik configuration";
@@ -184,6 +198,7 @@
           };
           extraOptions = [
             "--name=authentik-postgresql"
+            "--network=authentik-network"
             "--health-cmd=pg_isready -d authentik -U authentik"
             "--health-interval=30s"
             "--health-retries=5"
@@ -195,13 +210,13 @@
         authentik-redis = {
           image = "docker.io/library/redis:alpine";
           autoStart = true;
-          # FIXED: Start Redis with password authentication
           cmd = [ "redis-server" "--requirepass" "authentik-redis-password" "--save" "60" "1" "--loglevel" "warning" ];
           volumes = [
             "authentik-redis:/data"
           ];
           extraOptions = [
             "--name=authentik-redis"
+            "--network=authentik-network"
             "--health-cmd=redis-cli -a authentik-redis-password ping || exit 1"
             "--health-interval=30s"
             "--health-retries=5"
@@ -214,6 +229,9 @@
           image = config.theutis_services.authentik.image;
           autoStart = true;
           cmd = [ "server" ];
+          ports = [
+            "${toString config.theutis_services.authentik.port}:9000"
+          ];
           environment = {
             AUTHENTIK_SECRET_KEY = config.theutis_services.authentik.secretKey;
             AUTHENTIK_BOOTSTRAP_PASSWORD = config.theutis_services.authentik.bootstrapPassword;
@@ -249,8 +267,13 @@
           ];
           extraOptions = [
             "--name=authentik"
+            "--network=authentik-network"
             "--requires=authentik-postgresql"
             "--requires=authentik-redis"
+          ];
+          dependsOn = [
+            "authentik-postgresql"
+            "authentik-redis"
           ];
         };
 
@@ -283,8 +306,13 @@
           ];
           extraOptions = [
             "--name=authentik-worker"
+            "--network=authentik-network"
             "--requires=authentik-postgresql"
             "--requires=authentik-redis"
+          ];
+          dependsOn = [
+            "authentik-postgresql"
+            "authentik-redis"
           ];
         };
       };
