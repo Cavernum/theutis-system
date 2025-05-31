@@ -251,8 +251,8 @@
           ];
           extraOptions = [
             "--name=authentik"
-            "--depends-on=authentik-postgresql:healthy"
-            "--depends-on=authentik-redis:healthy"
+            "--requires=authentik-postgresql:healthy"
+            "--requires=authentik-redis:healthy"
           ];
         };
 
