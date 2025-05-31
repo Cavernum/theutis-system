@@ -63,7 +63,7 @@
     theutis_services.vaultwarden.enable = true;
     theutis_services.syncthing.enable = true;
     systemd.tmpfiles.rules = [
-      "d /var/log/caddy 0750 root root"
+      "d /var/log/caddy 0755 root root"
     ];
     virtualisation.oci-containers = {
       containers = {
