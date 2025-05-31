@@ -251,8 +251,8 @@
           ];
           extraOptions = [
             "--name=authentik"
-            "--requires=authentik-postgresql:healthy"
-            "--requires=authentik-redis:healthy"
+            "--requires=authentik-postgresql"
+            "--requires=authentik-redis"
           ];
         };
 
@@ -285,8 +285,8 @@
           ];
           extraOptions = [
             "--name=authentik-worker"
-            "--requires=authentik-postgresql:healthy"
-            "--requires=authentik-redis:healthy"
+            "--requires=authentik-postgresql"
+            "--requires=authentik-redis"
           ];
         };
       };
