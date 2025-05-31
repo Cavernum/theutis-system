@@ -195,16 +195,14 @@
         authentik-redis = {
           image = "docker.io/library/redis:alpine";
           autoStart = true;
-          cmd = [ "--save" "60" "1" "--loglevel" "warning" ];
+          # FIXED: Start Redis with password authentication
+          cmd = [ "redis-server" "--requirepass" "authentik-redis-password" "--save" "60" "1" "--loglevel" "warning" ];
           volumes = [
             "authentik-redis:/data"
           ];
-          environment = {
-            REDIS_PASSWORD = "authentik-redis-password";
-          };
           extraOptions = [
             "--name=authentik-redis"
-            "--health-cmd=redis-cli ping || exit 1"
+            "--health-cmd=redis-cli -a authentik-redis-password ping || exit 1"
             "--health-interval=30s"
             "--health-retries=5"
             "--health-start-period=30s"
