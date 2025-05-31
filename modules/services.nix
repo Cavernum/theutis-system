@@ -62,6 +62,12 @@
   in {
     theutis_services.vaultwarden.enable = true;
     theutis_services.syncthing.enable = true;
+    systemd.services.caddy.serviceConfig = {
+     LogsDirectory = "caddy";
+     LogsDirectoryMode = "0750";
+     User = "root";
+     Group = "root";
+    };
     virtualisation.oci-containers = {
       containers = {
         caddy = {
