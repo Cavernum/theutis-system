@@ -176,9 +176,19 @@
   };
   virtualisation.oci-containers.backend = "podman";
   networking.firewall.interfaces."podman1" = {
-    allowedTCPPorts = [ 53 ];
-    allowedUDPPorts = [ 53 ];
+    allowedTCPPorts = [ 53 80 443 ];
+    allowedUDPPorts = [ 53 80 443 ];
+  };
+  networking.firewall.interfaces."podman2" = {
+    allowedTCPPorts = [ 53 80 443 ];
+    allowedUDPPorts = [ 53 80 443 ];
   };
 
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.rp_filter" = 2;
+    "net.ipv4.conf.default.rp_filter" = 2;
+  };
+
+  services.openssh.settings.PermitRootLogin = "yes";  # TODO:: Change for production
   system.stateVersion = "24.11";
 }

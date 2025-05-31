@@ -36,7 +36,7 @@
           volumes = config.theutis_services.vaultwarden.volumes;
           environment = {
             # Core settings
-            ROCKET_PORT = "8009";
+            ROCKET_PORT = toString config.theutis_services.vaultwarden.port;
             ROCKET_WORKERS = "10";
 
             # Web vault settings
@@ -45,7 +45,7 @@
             WEBSOCKET_ENABLED = "true";
 
             # Optional settings (uncomment and modify as needed)
-            DOMAIN = "vaultwarden.${config.theutis_services.domain}";
+            DOMAIN = "https://vaultwarden.${config.theutis_services.domain}";
             # ADMIN_TOKEN = "your_admin_token_here";  # Generate this securely
             # SIGNUPS_ALLOWED = "false";  # Disable new sign-ups
 
@@ -61,7 +61,7 @@
             LOG_LEVEL = "warn";
           };
           extraOptions = [
-            "--network=vaultwarden-network"
+            # "--network=vaultwarden-network"
             "--name=vaultwarden"
           ];
         };

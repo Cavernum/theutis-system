@@ -44,8 +44,8 @@
       name,
       port,
     }: ''
-      ${name} {
-        reverse_proxy ${name}.${config.theutis_services.domain}:${toString port} {
+      ${name}.${config.theutis_services.domain} {
+        reverse_proxy ${name}:${toString port} {
           header_up X-Real-IP {remote_host}
           header_up Host {host}
           header_up X-Forwarded-For {remote}
@@ -53,6 +53,7 @@
         }
 
         log {
+          level debug
           output file /var/log/caddy/${name}.log
         }
       }
@@ -73,14 +74,13 @@
           volumes = [
             # "/var/www:/srv"  # Mount your website files here (modify path as needed)
             "caddy_data:/data"
-            "caddy_config:/config"
+            #"caddy_config:/config"
             "${caddyfile}:/etc/caddy/Caddyfile:ro"
             "/var/log/caddy:/var/log/caddy"
           ];
-          extraOptions = [
-            "--network=${lib.concatStringsSep " " (map ({name, ...}: "${name}-network") config.theutis_services.services)}"
-            "--name=caddy"
-          ];
+          # extraOptions =
+          #   (lib.concatMap ({name, ...}: ["--network=${name}-network"]) config.theutis_services.services)
+          #   ++ ["--name=caddy"];
         };
       };
     };
