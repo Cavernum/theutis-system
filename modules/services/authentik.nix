@@ -54,15 +54,15 @@
 
     # Create the authentik network
     systemd.services.create-authentik-network = {
-      description = "Create Docker network for Authentik";
-      after = [ "docker.service" ];
-      wants = [ "docker.service" ];
+      description = "Create Podman network for Authentik";
+      after = [ "podman.service" ];
+      wants = [ "podman.service" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStart = "${pkgs.docker}/bin/docker network create authentik-network || true";
-        ExecStop = "${pkgs.docker}/bin/docker network rm authentik-network || true";
+        ExecStart = "${pkgs.podman}/bin/podman network create authentik-network || true";
+        ExecStop = "${pkgs.podman}/bin/podman network rm authentik-network || true";
       };
     };
 
