@@ -80,35 +80,5 @@
         };
       };
     };
-    
-    # Create systemd service to configure Syncthing after startup
-    systemd.services.syncthing-config = {
-      description = "Configure Syncthing for OIDC";
-      after = [ "docker-syncthing.service" ];
-      wants = [ "docker-syncthing.service" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = let
-          configScript = pkgs.writeShellScript "syncthing-config" ''
-            set -e
-            
-            # Wait for Syncthing to be ready
-            echo "Waiting for Syncthing to be ready..."
-            for i in {1..30}; do
-              if curl -f http://localhost:${toString config.theutis_services.syncthing.port}/ >/dev/null 2>&1; then
-                echo "Syncthing is ready!"
-                break
-              fi
-              echo "Waiting... ($i/30)"
-              sleep 5
-            done
-            
-            echo "Syncthing configuration completed!"
-          '';
-        in "${configScript}";
-      };
-    };
   };
 }
