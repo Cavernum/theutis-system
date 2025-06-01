@@ -63,8 +63,8 @@
 #            SSO_ROLES_DEFAULT_TO_USER = "true";
             
             # Security settings
-            SIGNUPS_ALLOWED = "false";  # Only allow OIDC sign-ins
-            INVITATIONS_ALLOWED = "true";
+#            SIGNUPS_ALLOWED = "false";  # Only allow OIDC sign-ins
+#            INVITATIONS_ALLOWED = "true";
             
             # Optional admin settings
             # ADMIN_TOKEN = "your_admin_token_here";
