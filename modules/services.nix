@@ -53,61 +53,62 @@
     genRProxyRule = {
       name,
       port,
-      protected ? true,
-    }: let
-      authBlock = lib.optionalString protected ''
-        # OIDC Authentication with Authentik
-        forward_auth authentik:9000 {
-          uri /outpost.goauthentik.io/auth/caddy
-          copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid
-        }
-        
-        # Handle auth errors
-        handle_errors {
-          @401 expression {http.error.status_code} == 401
-          redir @401 https://authentik.${config.theutis_services.domain}/outpost.goauthentik.io/start?rd=https://${name}.${config.theutis_services.domain}/
-        }
-      '';
-      protectedBlock = lib.optionalString protected ''
-        route {
-          handle_path /health* {
-            reverse_proxy ${name}:${toString port}
-          }
-          handle_path /ping* {
-            reverse_proxy ${name}:${toString port}
-          }
-          handle {
-            ${authBlock}
-            reverse_proxy ${name}:${toString port} {
-              header_up X-Real-IP {remote_host}
-              header_up Host {host}
-              header_up X-Forwarded-For {remote}
-              header_up X-Forwarded-Proto {scheme}
-              header_up X-Forwarded-Port {server_port}
-            }
-          }
-        }
-      '';
-      # If not protected, just reverse proxy
-      unprotectedBlock = lib.optionalString (!protected) ''
-        reverse_proxy ${name}:${toString port} {
-          header_up X-Real-IP {remote_host}
-          header_up Host {host}
-          header_up X-Forwarded-For {remote}
-          header_up X-Forwarded-Proto {scheme}
-          header_up X-Forwarded-Port {server_port}
-        }
-      '';
-    in ''
+     }: ''
+#      protected ? true,
+#    }: let
+#      authBlock = lib.optionalString protected ''
+#        # OIDC Authentication with Authentik
+#        forward_auth authentik:9000 {
+#          uri /outpost.goauthentik.io/auth/caddy
+#          copy_headers X-Authentik-Username X-Authentik-Groups X-Authentik-Email X-Authentik-Name X-Authentik-Uid
+#        }
+#        
+#        # Handle auth errors
+#        handle_errors {
+#          @401 expression {http.error.status_code} == 401
+#          redir @401 https://authentik.${config.theutis_services.domain}/outpost.goauthentik.io/start?rd=https://${name}.${config.theutis_services.domain}/
+#        }
+#      '';
+#      protectedBlock = lib.optionalString protected ''
+#        route {
+#          handle_path /health* {
+#            reverse_proxy ${name}:${toString port}
+#          }
+#          handle_path /ping* {
+#            reverse_proxy ${name}:${toString port}
+#          }
+#          handle {
+#            ${authBlock}
+#            reverse_proxy ${name}:${toString port} {
+#              header_up X-Real-IP {remote_host}
+#              header_up Host {host}
+#              header_up X-Forwarded-For {remote}
+#              header_up X-Forwarded-Proto {scheme}
+#              header_up X-Forwarded-Port {server_port}
+#            }
+#          }
+#        }
+#      '';
+#      # If not protected, just reverse proxy
+#      unprotectedBlock = lib.optionalString (!protected) ''
+#        reverse_proxy ${name}:${toString port} {
+#          header_up X-Real-IP {remote_host}
+#          header_up Host {host}
+#          header_up X-Forwarded-For {remote}
+#          header_up X-Forwarded-Proto {scheme}
+#          header_up X-Forwarded-Port {server_port}
+#        }
+#      '';
+#    in ''
       ${name}.${config.theutis_services.domain} {
-        ${authBlock}
+#        ${authBlock}
 
         reverse_proxy ${name}:${toString port} {
           header_up X-Real-IP {remote_host}
           header_up Host {host}
           header_up X-Forwarded-For {remote}
           header_up X-Forwarded-Proto {scheme}
-          header_up X-Forwarded-Port {server_port}
+#          header_up X-Forwarded-Port {server_port}
         }
 
         log {
@@ -118,22 +119,23 @@
     '';
     
     # Main domain redirect to Authentik
-    mainDomainRule = ''
-      ${config.theutis_services.domain} {
-        redir https://authentik.${config.theutis_services.domain}/if/admin/
-        
-        log {
-          output file /var/log/caddy/main.log
-        }
-      }
-    '';
+#    mainDomainRule = ''
+#      ${config.theutis_services.domain} {
+#        redir https://authentik.${config.theutis_services.domain}/if/admin/
+#        
+#        log {
+#          output file /var/log/caddy/main.log
+#        }
+#      }
+#    '';
     
-    allRules = [mainDomainRule] ++ (map genRProxyRule config.theutis_services.services);
-    caddyfile = pkgs.writeText "Caddyfile" (lib.concatStringsSep "\n\n" allRules);
-    allNetworks = ["authentik-network"] #++ (map ({name, ...}: "${name}-network") config.theutis_services.services);
+#    allRules = [mainDomainRule] ++ (map genRProxyRule config.theutis_services.services);
+#    caddyfile = pkgs.writeText "Caddyfile" (lib.concatStringsSep "\n\n" allRules);
+    caddyfile = pkgs.writeText "Caddyfile" "${lib.concatStringsSep "\n\n" (map genRProxyRule config.theutis_services.services)}";
+#    allNetworks = ["authentik-network"] #++ (map ({name, ...}: "${name}-network") config.theutis_services.services);
     
   in {
-    theutis_services.authentik.enable = true;
+#    theutis_services.authentik.enable = true;
     theutis_services.vaultwarden.enable = true;
     theutis_services.syncthing.enable = true;
     

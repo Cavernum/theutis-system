@@ -27,7 +27,7 @@
       {
         name = "vaultwarden";
         port = config.theutis_services.vaultwarden.port;
-        protected = true;
+        #protected = true;
       }
     ];
     
@@ -50,17 +50,17 @@
             DOMAIN = "https://vaultwarden.${config.theutis_services.domain}";
             
             # OIDC Configuration with Authentik
-            SSO_ENABLED = "true";
-            SSO_ONLY = "false";
-            SSO_CLIENT_ID = "vaultwarden";
-            SSO_CLIENT_SECRET = "vaultwarden-secret-key";
-            SSO_AUTHORITY = "https://authentik.${config.theutis_services.domain}/application/o/vaultwarden/";
-            SSO_SCOPES = "openid profile email";
-            
-            # Additional OIDC settings
-            SSO_MASTER_KEY_FROM_AUTH_CLAIMS = "true";
-            SSO_AUTH_ONLY_NOT_SESSION = "false";
-            SSO_ROLES_DEFAULT_TO_USER = "true";
+#            SSO_ENABLED = "true";
+#            SSO_ONLY = "false";
+#            SSO_CLIENT_ID = "vaultwarden";
+#            SSO_CLIENT_SECRET = "vaultwarden-secret-key";
+#            SSO_AUTHORITY = "https://authentik.${config.theutis_services.domain}/application/o/vaultwarden/";
+#            SSO_SCOPES = "openid profile email";
+#            
+#            # Additional OIDC settings
+#            SSO_MASTER_KEY_FROM_AUTH_CLAIMS = "true";
+#            SSO_AUTH_ONLY_NOT_SESSION = "false";
+#            SSO_ROLES_DEFAULT_TO_USER = "true";
             
             # Security settings
             SIGNUPS_ALLOWED = "false";  # Only allow OIDC sign-ins
@@ -82,11 +82,11 @@
 
             # Logging settings
             LOG_LEVEL = "warn";
-            EXTENDED_LOGGING = "true";
+#            EXTENDED_LOGGING = "true";
             
             # Trust proxy headers (for proper IP forwarding)
-            IP_HEADER = "X-Forwarded-For";
-            ICON_SERVICE = "internal";
+#            IP_HEADER = "X-Forwarded-For";
+#            ICON_SERVICE = "internal";
           };
           extraOptions = [
             "--name=vaultwarden"
