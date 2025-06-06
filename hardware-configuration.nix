@@ -2,67 +2,83 @@
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 { config, lib, pkgs, modulesPath, ... }:
+
 {
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];
+  boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
+
   fileSystems."/" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
       fsType = "btrfs";
       options = [ "subvol=@" ];
     };
-  fileSystems."/var" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
-      fsType = "btrfs";
-      options = [ "subvol=@var" ];
-    };
-  fileSystems."/var/log" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
-      fsType = "btrfs";
-      options = [ "subvol=@var_log" ];
-    };
-  fileSystems."/opt" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
-      fsType = "btrfs";
-      options = [ "subvol=@opt" ];
-    };
-  fileSystems."/home" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
-      fsType = "btrfs";
-      options = [ "subvol=@home" ];
-    };
-  fileSystems."/tmp" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
-      fsType = "btrfs";
-      options = [ "subvol=@tmp" ];
-    };
-  fileSystems."/srv" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/b4e147ae-ef06-4ed7-8bec-11abef616e66";
-      fsType = "btrfs";
-      options = [ "subvol=@srv" ];
-    };
+
   fileSystems."/boot" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/fa0ee731-e2ec-491e-be83-2039aa25c1a2";
-      fsType = "ext4";
-    };
-  fileSystems."/boot/efi" =
-    { device = lib.mkDefault "/dev/disk/by-uuid/B80B-B05F";
+    { device = "/dev/disk/by-uuid/6EE2-E98D";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
+
+  fileSystems."/boot/efi" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/6EE2-B8E0";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+
+  fileSystems."/home" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
+      fsType = "btrfs";
+      options = [ "subvol=@home" ];
+    };
+
+  fileSystems."/opt" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
+      fsType = "btrfs";
+      options = [ "subvol=@opt" ];
+    };
+
+  fileSystems."/srv" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
+      fsType = "btrfs";
+      options = [ "subvol=@srv" ];
+    };
+
+  fileSystems."/tmp" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
+      fsType = "btrfs";
+      options = [ "subvol=@tmp" ];
+    };
+
+  fileSystems."/var" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
+      fsType = "btrfs";
+      options = [ "subvol=@var" ];
+    };
+
+  fileSystems."/var/log" =
+    { device = lib.mkDefault "/dev/disk/by-uuid/fce3ad87-9cad-41f7-8f0d-a0813ff80f0d";
+      fsType = "btrfs";
+      options = [ "subvol=@var_log" ];
+    };
+
   swapDevices =
-    [ { device = lib.mkDefault "/dev/disk/by-uuid/097099d8-05bb-4459-8ce4-d52c67d09edf"; }
+    [ { device = lib.mkDefault "/dev/disk/by-uuid/66a6b46f-5680-452f-8281-4a5374ee9510"; }
     ];
+
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.eno1.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp1s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp2s0.useDHCP = lib.mkDefault true;
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
